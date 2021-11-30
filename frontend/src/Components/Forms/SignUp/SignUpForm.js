@@ -2,8 +2,6 @@ import React, {useState} from 'react';
 import './SignUpForm.scss';
 import GoogleLogin from 'react-google-login'
 import { signup } from '../../../Api/index.js'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckFieldsButton from "react-validation/build/button";
@@ -20,7 +18,7 @@ const required = (value) => {
     }
 };
 
-function SignUpForm({user}) {
+function SignUpForm() {
 
     const [isSignIn, setIsSignin] = useState(true)
     const [email, setEmail] = useState("")
@@ -30,23 +28,12 @@ function SignUpForm({user}) {
     const [imageurl, setImageurl] = useState("dummy")
     const [password, setPassword] = useState("")
 
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
     const formElement = React.useRef()
     let chkbuttonElement = React.useRef();
 
-
-    const handleSuccess = async (resp) => {
-        
-        const profileObj = resp?.profileObj
-        const token = resp?.tokenId
-
-        try {
-            dispatch({type: 'AUTH', data: { profileObj, token }})
-            navigate('/')
-        } catch (error) {
-            console.log(error)  
-        }
+    const handleSuccess = (resp) => {
+        console.log(resp)
+        console.log(resp?.profileObj)
     }
 
     const handleFailure = (error) => {
@@ -179,7 +166,7 @@ function SignUpForm({user}) {
                             id="add-password"
                             type="password"
                             className="_inputField"
-                            name="password"
+                            name="emailid"
                             value={password}
                             data-state="setPassword"
                             onChange={onChangeValue}
@@ -199,12 +186,15 @@ function SignUpForm({user}) {
                             cookiePolicy='single_host_origin'
                         />
                     </div>
+                    {isSignIn ? 
                         <div className="noAccount">
                             Dont have an account? <button type="button" onClick={authPageSwitch}>Sign Up</button>
                         </div>
+                        :
                         <div className="noAccount">
                             Have an account? <button type="button" onClick={authPageSwitch}>Sign In</button>
                         </div>
+                    }
                     
                     <CheckFieldsButton style={{ display: "none" }} ref={chkbuttonElement} /> 
                 </Form>
